@@ -9,9 +9,14 @@ class block_evasys extends block_base {
 	
 	public function get_content() {
 		Global $USER, $SESSION, $CFG, $DB;
-		$id = required_param('id', PARAM_INT);
+		$id = optional_param('id', 0, PARAM_INT);
+		if (id == 0) {
+			$this->content =  new stdClass;
+			$this->content->text='';
+			$this->content->footer = '';
+			return $this->content;
+		}
 		$course = $DB->get_record('course', array('id'=>$id));
-		
 		if ($this->content !== null) {
 			return $this->content;
 		}
