@@ -9,6 +9,7 @@ class Evasys_vfh
 	 
 	public function __construct($wsdl,$wsdlheader,$soapuser,$soappass,$proxy='',$proxyport=0)
 	{
+
 		$soapclient=false;
 		try {
 			if (($proxy!='')&&($proxyport!=0)) {
@@ -132,7 +133,6 @@ class Evasys_vfh
 	}	
 	
 function getSubunitUser($subunit_id,$surname) {
-	$return=false;
 	try {
 		$subunit = $this->client->GetSubunit(intval($subunit_id),'INTERNAL',true);
 		if ($subunit) {
@@ -154,7 +154,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	
 	function getPeriodId($period_key) {
-		$return=false;
 		try {
 			$periods = $this->client->GetAllPeriods();
 			foreach ($periods->Periods as $period) {
@@ -169,7 +168,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function getSubunits()
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetSubunits();
 		}
@@ -179,7 +177,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function getSubunit($SubunitId, $IdType='INTERNAL', $IncludeInstructors=false)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetSubunit(intval($SubunitId),$IdType, $IncludeInstructors);
 		}
@@ -189,7 +186,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetUsersBySubunit($nSubunitId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetUsersBySubunit($nSubunitId);
 		}
@@ -219,7 +215,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetCoursesByUserId($nUserId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetCoursesByUserId($nUserId);
 		}
@@ -229,7 +224,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetCourse($CourseId,$IdType='INTERNAL',$IncludeSurveys=false,$IncludeParticipants=false)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetCourse($CourseId,$IdType='INTERNAL',$IncludeSurveys,$IncludeParticipants);
 		}
@@ -239,7 +233,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function InsertCourse($oCourse)
 	{
-		$return=false;
 		try {
 			$return = $this->client->InsertCourse($oCourse);
 		}
@@ -249,7 +242,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetOnlineSurveyLinkByEmail($SurveyId, $EmailAddress, $AddRecipientToSurvey=true, $AutoIncreasePSWDCount=true)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetOnlineSurveyLinkByEmail(intval($SurveyId), $EmailAddress, $AddRecipientToSurvey, $AutoIncreasePSWDCount);
 		}
@@ -259,7 +251,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetPDFReport($nSurveyId,$nUserId=0,$nCustomPDFId=0,$nLanguageID=0)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetPDFReport($nSurveyId,$nUserId,$nCustomPDFId,$nLanguageID);
 		}
@@ -269,7 +260,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetAllPeriods()
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetAllPeriods();
 		}
@@ -279,7 +269,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function InsertCentralSurvey($nUserId, $nCourseId, $nFormId, $nPeriodId, $sSurveyType='o', $sNotice='')
 	{
-		$return=false;
 		try {
 			$return = $this->client->InsertCentralSurvey($nUserId, $nCourseId, $nFormId, $nPeriodId, $sSurveyType, $sNotice);
 		}
@@ -289,7 +278,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetSurveysByCourse($nCourseId, $nFormId='', $nPeriodId='')
 	{
-		$return=false;
 		try {
 			$surveys = $this->client->GetSurveysByCourse($nCourseId, $nFormId, $nPeriodId);
 			if (is_array($surveys->Surveys)) {
@@ -304,7 +292,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function GetAllForms($IncludeCustomReports=false)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetAllForms($IncludeCustomReports);
 		}
@@ -314,7 +301,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetCourseTypes($OnlyModuleCourseTypes=false)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetCourseTypes($OnlyModuleCourseTypes);
 		}
@@ -324,7 +310,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function OpenSurvey($nSurveyId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->OpenSurvey($nSurveyId);
 		}
@@ -334,7 +319,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function CloseSurvey($nSurveyId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->CloseSurvey($nSurveyId);
 		}
@@ -344,7 +328,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetPDFPswd($SurveyId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetPDFPswd($SurveyId);
 		}
@@ -354,7 +337,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function GetSurveyById($nSurveyId)
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetSurveyById($nSurveyId);
 		}
@@ -364,7 +346,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	public function UpdateSurvey($oSurvey)
 	{
-		$return=false;
 		try {
 			$return = $this->client->UpdateSurvey($oSurvey);
 		}
@@ -374,7 +355,6 @@ function getSubunitUser($subunit_id,$surname) {
 
 	public function GetPDFQuestionnaire($FormId, $SurveyId='')
 	{
-		$return=false;
 		try {
 			$return = $this->client->GetPDFQuestionnaire($FormId, $SurveyId='');
 		}
@@ -384,7 +364,6 @@ function getSubunitUser($subunit_id,$surname) {
 	
 	
 function getCourseByKeyAndUser($user_id,$course_key) {
-	$return=false;
 	try {
 		$usercourses = $this->client->GetCoursesByUserId(intval($user_id));
 		foreach ($usercourses as $usercourse) {

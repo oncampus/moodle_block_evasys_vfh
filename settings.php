@@ -4,6 +4,18 @@ $settings->add(new admin_setting_heading(
 	get_string('headerconfig', 'block_evasys'),            
 	get_string('descconfig', 'block_evasys')    ,''    
 )); 
+
+$settings->add(new admin_setting_configtext(            
+	'evasys/curl_url',            
+	get_string('configlabel_curl_url', 'block_evasys'),            
+	get_string('configdesc_curl_url', 'block_evasys'),''
+));
+$settings->add(new admin_setting_configtext(            
+	'evasys/curl_token',            
+	get_string('configlabel_curl_token', 'block_evasys'),            
+	get_string('configdesc_curl_token', 'block_evasys'),''
+));
+
 $settings->add(new admin_setting_configtext(            
 	'evasys/wsdl',            
 	get_string('configlabel_wsdl', 'block_evasys'),            

@@ -34,3 +34,10 @@ $string['warning_missing_configuration_error'] = 'Fehlende Konfiguration!';
 $string['entrytext'] = 'Bitte nehmen Sie sich <br/>einen Augenblick Zeit für';
 $string['evaluationlink'] = 'Evaluation';
 $string['footertext'] = 'Nur durch Ihre Mitarbeit können wir die Qualität verbessern. Selbstverständlich erfolgt die Befragung anonym.<br/><br/><strong>Vielen Dank!</strong>';
+
+$string['configlabel_curl_url'] = 'get_course_evaluations url';
+$string['configdesc_curl_url'] = 'URL for get_course_evaluations.php';
+$string['configlabel_curl_token'] = 'Token';
+$string['configdesc_curl_token'] = 'evaluations token';
+
+$string['evasys:editsurvey'] = 'Edit survey';

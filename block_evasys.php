@@ -8,9 +8,26 @@ class block_evasys extends block_base {
 	}
 	
 	public function get_content() {
+
+
+// quick dev test
+$this->content->text = '';
+$this->content->footer = '';
+return $this->content;  
+
+
+
+
 		Global $USER, $SESSION, $CFG, $DB;
+		
+
+		
+		
 		$id = optional_param('id', 0, PARAM_INT);
-		if (id == 0) {
+		
+
+		
+		if ($id == 0) {
 			$this->content =  new stdClass;
 			$this->content->text='';
 			$this->content->footer = '';
@@ -20,8 +37,14 @@ class block_evasys extends block_base {
 		if ($this->content !== null) {
 			return $this->content;
 		}
+		
+	
+		
 		$this->content =  new stdClass;
 		$this->content->text='';
+		
+
+		
 		
 		$global_wsdl=get_config('evasys','wsdl');
 		$wsdl  = (!empty($global_wsdl)) ? $global_wsdl : false;
@@ -39,6 +62,7 @@ class block_evasys extends block_base {
 		$proxyport  = (!empty($global_proxyport)) ? $global_proxyport : 0;		
 		
 		$blocktext='';
+		// $blocktext='<!-- evasysdebug -->';
 		
 		if (has_capability('moodle/block:edit', $this->page->context)) {
 			$isteacher=true;
@@ -58,8 +82,7 @@ class block_evasys extends block_base {
 			$eva_info_found=false;
 			$eva_exists=false;
 				
-			//var_dump($SESSION);
-				
+		
 			if (!empty($SESSION->ce)){
 				$debug.="Info aus Session<br>";
 				$course_evaluations=$SESSION->ce;
@@ -77,7 +100,7 @@ class block_evasys extends block_base {
 				$debug.="Keine Info aus Session<br>";
 				$course_evaluations=array();
 			}			
-			
+		
 			
 			
 			// Wenn noch keine Infos über Evaluationslink im Kurs vorliegen diese ermitteln
@@ -98,7 +121,80 @@ class block_evasys extends block_base {
 				
 				
 				$debug.="Keine Evainfos vorhanden<br>";
+				
+				
+				
+				$course_code = $course->idnumber;
+				$username = $USER->username;
+				$evaluation_token = get_config('evasys','curl_token');
+				//$evaluation_token = '85yRVWnD15uTB3hZjIzs5X2ytGVa8ezb';
+				
+				$token = md5($course_code.$username.$evaluation_token);
 
+				$debug.= '<br/>course:'.$course_code;
+				$debug.= '<br/>user:'.$username;
+				$debug.= '<br/>token:'.$token;
+				
+				
+				ini_set('arg_separator.output', '&');
+
+				$get_course_evaluations_url = get_config('evasys','curl_url');
+				//$get_course_evaluations_url = "https://moodalis.oncampus.de/fhl/get_course_evaluations.php";
+				
+				$postfields = array(
+						"course"=>$course_code,
+						"user"=>$username,
+						"token"=>$token
+				);
+				$postfields = http_build_query($postfields);
+				
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL,$get_course_evaluations_url);
+				curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+				curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+				curl_setopt($ch, CURLOPT_POST, 1);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+				
+				$cookiefile = '/tmp/'.uniqid().'cookies.tmp';
+				curl_setopt ($ch, CURLOPT_COOKIEFILE, $cookiefile);
+				curl_setopt ($ch, CURLOPT_COOKIEJAR, $cookiefile);
+				
+				$result = curl_exec($ch);		
+				
+				curl_close($ch);
+
+				$surveys = (array) unserialize($result);			
+				
+				$debug.=print_r($surveys,true);
+				
+				if ($surveys) {							
+					foreach ($surveys as $survey_id) {							
+						$survey = $evasys->GetSurveyById($survey_id);
+						
+						$survey_form=$survey->m_nFrmid;
+						$survey_id=$survey->m_nSurveyId;
+						$survey_period=$survey->m_oPeriod->m_nPeriodId;
+						$survey_open=$survey->m_nOpenState;
+						$survey_title=$survey->m_sTitle;
+						$survey_formtitle='Fragebogen zur Evaluation von Online-Lehrveranstaltungen';						
+				
+						if (!$teilnahmelink=$evasys->GetOnlineSurveyLinkByEmail ($survey_id,$USER->email)) {
+							$debug.="schon teilgenommen<br>";
+						} else {
+							$tanarray=explode('=', $teilnahmelink);
+							$tan=$tanarray[1];
+							$course_evaluations[]=array($course->id,$survey_title,$tan,$survey_formtitle);
+							$SESSION->ce=$course_evaluations;
+							$eva_exists=true;
+						}				
+				
+					}
+				}
+				
+
+				/*
 				$course_info = explode('-',$course->idnumber);
 				$institution=$course_info[0];
 				$programcode=$course_info[2];
@@ -211,7 +307,7 @@ class block_evasys extends block_base {
 						}	
 						
 					}
-					
+					*/
 				}				
 				
 				
@@ -242,10 +338,12 @@ class block_evasys extends block_base {
 					}
 				}
 				$blocktext .= get_string('footertext', 'block_evasys');
-				$blocktextt .= '</center>';
+				$blocktext .= '</center>';
+				// $blocktext .= '<!-- DEBUG '.$debug.' -->';
 
 			} else {
 				$blocktext='';
+				// $blocktext .= '<!-- DEBUG '.$debug.' -->';
 			}			
 			
 			
